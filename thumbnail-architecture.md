@@ -39,7 +39,7 @@
 
 - 上传生成
 
-    当用户上传一张图片之后，系统自动为该图片生成对应的固定格式缩略图，然后将原图与缩略图一起存放到file storage里面去。这方面主要有facebook的[needle](http://static.usenix.org/event/osdi10/tech/full_papers/Beaver.pdf)系统。
+    当用户上传一张图片之后，系统自动为该图片生成对应的固定格式缩略图，然后将原图与缩略图一起存放到file storage里面去。这方面主要有facebook的[Haystack](http://static.usenix.org/event/osdi10/tech/full_papers/Beaver.pdf)系统。
     
 - 实时生成
 
@@ -59,10 +59,18 @@
 
 生成缩略图之后，如何保证该图片的安全访问也是一个需要关注的问题。笔者考虑了如下解决方案：
 
-- 签名，任何缩略图的url都是经过签名，因为签名是通过登陆用户自身的access id和security key进行的，并且有时效性，所以外界很难伪造。
-
-    这里，笔者没有使用[HttpAccessKeyModule](http://wiki.nginx.org/HttpAccessKeyModule)来进行访问控制，是因为access key的签名通常是通过remote_addr来生成。而对于企业用户来说，对外出口就一个ip地址，所以即使是不同人，生成的签名也是一样，数据就有可能被另一个用户给获取。
+- 签名，任何缩略图的url都是经过签名，因为签名是通过登陆用户自身的access id和security key进行的，并且有时效性，所以外界很难伪造。或者，可以使用简单的[HttpAccessKeyModule](http://wiki.nginx.org/HttpAccessKeyModule)来进行访问控制。
 
 - nginx [HttpRefererModule](http://wiki.nginx.org/HttpRefererModule)，只允许特定domain的请求访问。
+
+## 存储
+
+对于如何存储大量的图片小文件，笔者觉得可以如下考虑：
+
+- 对于文件最终存放的file storage，业界有很多好的分布式解决方案，譬如[TFS](http://code.taobao.org/p/tfs/src/)，[mogilefs](https://github.com/mogilefs)等，如果想自己造一个轮子，也很不错。
+- 对于图片的cache，因为cache的存储文件量级我们是可以控制的，所以这里可以考虑直接使用通常的文件系统存储。
+    
+    但需要注意的是，单个目录下面文件数量不能过多，目录的层次也不能过深，不然会导致很严重的性能瓶颈。为了解决上述问题，笔者建立了三层目录结构，首层100个文件夹，以1 - 100命名，每个文件夹下面1000个文件夹，以1 - 1000命名，对于任意的图片文件，根据其实际的文件名通过两次hash到特定的目录下。
+    
 
 版权声明：自由转载-非商用-非衍生-保持署名 [Creative Commons BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh)

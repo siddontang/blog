@@ -6,7 +6,7 @@
 
 整体架构如下：
 
-![image](./asserts/thumbnail-architecture.png)
+![image](https://raw.github.com/siddontang/blog/master/asserts/thumbnail-architecture.png)
 
 可以看到，笔者采用了通用的分层架构设计模式。
 

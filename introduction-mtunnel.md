@@ -15,7 +15,7 @@ mtunnel通过http tunnel的方式来进行数据的交互。它将双方交互�
 
 假设，企业服务器启动了sshd，而我们这边使用putty。流程如下：
 
-![image](./asserts/mtunnel-flow.png)
+![image](https://raw.github.com/siddontang/blog/master/asserts/mtunnel-flow.png)
 
 - putty直接将数据发送给forward proxy，由forward proxy将数据通过http body发送给server。
 - server收到数据之后将其放置在一个buffer中。如果reverse proxy这时候已经连接到server，则直接将数据发送给reverse proxy。

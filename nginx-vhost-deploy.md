@@ -143,3 +143,5 @@ ip和port大家很好理解，对于server_name，可以认为就是发送http�
 ## end
 
 可以看到，内外网的配置，其实就是nginx vhost的配置，而关键点就在于listen以及server_name。详细可以参考[How nginx processes a request](http://nginx.org/en/docs/http/request_processing.html)，[Server names](http://nginx.org/en/docs/http/server_names.html)。
+
+版权声明：自由转载-非商用-非衍生-保持署名 [Creative Commons BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh)

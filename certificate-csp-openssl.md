@@ -63,11 +63,11 @@
 
 - 字节序问题，windows csp对于sign使用的是小端序，而openssl等都使用的是大端序。所以我们在处理的时候需要进行字节序转换。
 - openssl rsautl，dgst。这是最坑爹的了，openssl的rsautl貌似已经被废弃了，所以verify的时候不能使用rsautl，只能用dgst才能保证csp sign的数据服务器能verify。但是对于加解密来说rsautl竟然又可以。神奇！
-- Base64，JS对于二进制流的处理比较蛋疼，所以我们的接口都是使用base54编码的，但python的base64会有一个**'\n'**，这个就得我们手动去掉了。
+- Base64，JS对于二进制流的处理比较蛋疼，所以我们的接口都是使用base64编码的，但python的base64会有一个**'\n'**，这个就得我们手动去掉了。
 - CSPICOM，原以为JS能调用CSPICOM就很方便了，但是CSPICOM在win7已经不支持，所以只能我们自己封装一个ActiveX，来调用CSP对应函数。
 
 ## end
 
-对于CSP的相关代码，因为都是从网络以及MSDN上面借鉴来的，这里也直接公开，在[这里](https://gist.github.com/siddontang/5792247)。另外，不得不吐槽一下WIN32的API，笔者是在没有Visual AssixtX写的代码，太辛苦了！
+CSP的相关代码在[这里](https://gist.github.com/siddontang/5792247)。需要注意的是，证书的添加以及删除需要使用管理员权限。另外，不得不吐槽一下WIN32的API，笔者是在没有Visual AssixtX写的代码，太辛苦了！
 
 版权声明：自由转载-非商用-非衍生-保持署名 [Creative Commons BY-NC-ND 3.0](http://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh)

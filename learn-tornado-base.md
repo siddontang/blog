@@ -22,7 +22,6 @@ tornado是一个典型的prefork + io event loop的web server架构，![Alt text
 
 通过上面的分析，直到tornado的架构是很简单明了的，所以自然我们也能够通过简短的一些代码就能搭建起自己的http server。以一个hello world开始：
 
-    {% highlight python %}
     import tornado.web 
     import tornado.httpserver 
     import tornado.ioloop 
@@ -37,7 +36,6 @@ tornado是一个典型的prefork + io event loop的web server架构，![Alt text
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(8080)
     tornado.ioloop.IOLoop.instance().start()
-    {% endhighlight %}
 
 流程很简单，如下：
 
@@ -57,7 +55,6 @@ tornado是一个典型的prefork + io event loop的web server架构，![Alt text
 
 我们在创建Application的时候，会指定不同的url pattern需要处理的handler。如下：
 
-    {% highlight python %}
     import tornado.web 
     import tornado.httpserver 
     import tornado.ioloop 
@@ -79,11 +76,8 @@ tornado是一个典型的prefork + io event loop的web server架构，![Alt text
     http_server = tornado.httpserver.HTTPServer(application)
     http_server.listen(8080)
     tornado.ioloop.IOLoop.instance().start()
-    {% endhighlight %}
 
 在上面的例子中，我们有两个handler，分别处理url path为index1和index2的情况，对于index2来说，我们看到，它后面还需要匹配一个单词。我们通过curl访问如下：
-
-    {% highlight bash %}
 
     $ curl http://127.0.0.1:8080/index1
     index1
@@ -91,13 +85,9 @@ tornado是一个典型的prefork + io event loop的web server架构，![Alt text
     $ curl http://127.0.0.1:8080/index2/abc
     index2abc
 
-    {% endhighlight %}
-
 ## http method
 
 RequestHandler支持任何http mthod，包括get，post，head和delete，也就是说，tornado天生支持restful编程模型。
-
-    {% highlight python %}
 
     class MainHandler(tornado.web.RequestHandler):
         def get(self):
@@ -111,8 +101,6 @@ RequestHandler支持任何http mthod，包括get，post，head和delete，也就
 
         def delete(self):
             pass
-
-    {% endhighlight %}
 
 从上面可以看到，我们只需要在handler里面实现自己的get，post，head和delete函数就可以了，这点再次说明tornado的简洁与强大。
 

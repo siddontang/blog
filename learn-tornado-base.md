@@ -6,7 +6,7 @@
 
 # 架构
 
-tornado是一个典型的prefork + io event loop的web server架构，![Alt text](/assets/tornado/architecture.png "architecture")
+tornado是一个典型的prefork + io event loop的web server架构，![Alt text](https://raw.github.com/siddontang/blog/master/asserts/tornado-architecture.png "architecture")
 
 从图上可以看出，tornado的架构是很简单清晰的。
 

@@ -1,8 +1,8 @@
 # 前言
 
-在python里面，有许多[web framework](http://wiki.python.org/moin/WebFrameworks)。对于我来说，因为大多数时间在使用tornado，所以有了对其进行剖析的想法，同时记录一些对于tornado的心得体会。
+在python里面，有许多[web framework](http://wiki.python.org/moin/WebFrameworks)。对于我来说，因为很长一段时间都在使用tornado，所以有了一些心得体会。
 
-在这里，要说明一下，tornado采用的是2.4版本，不同tornado版本差别还比较大，我今天就在2.2和2.3版本上面栽了跟头，这个后续可以说一下。
+在这里，要说明一下，tornado采用的是**2.4**版本。
 
 # 架构
 
@@ -106,4 +106,4 @@ RequestHandler支持任何http mthod，包括get，post，head和delete，也就
 
 # 后续next
 
-这里，只是简单了介绍了一下tornado，后续将会从template，asynchronous，database，security等分别介绍一下。希望通过这个能让自己对tornado的理解更加深刻，同时也为后续使用其他python web framework做参考。
+这里，只是简单了介绍了一下tornado，后续将会从template，asynchronous，security等分别介绍一下。希望通过这个能让自己对tornado的理解更加深刻，同时也为后续使用其他python web framework做参考。

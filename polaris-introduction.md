@@ -94,4 +94,4 @@ Env用以表明该次请求的上下文环境，主要是为了纪念一个内�
 
 现在的[polaris](https://github.com/siddontang/polaris)只支持基本的restful模型，后续我考虑将自己开发的其他库，譬如log，mysql等进行整合，使其真正成为一个可用的restful web framework。
 
-代码在这里[https://github.com/siddontang/polari](https://github.com/siddontang/polaris)，欢迎大家反馈。
+代码在这里[https://github.com/siddontang/polaris](https://github.com/siddontang/polaris)，欢迎大家反馈。

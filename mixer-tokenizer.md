@@ -51,7 +51,7 @@ mixer希望在proxy这层就提供自定义路由，sql黑名单，防止sql注�
 
 # mixer lexer
 
-mixer的词法分析实现主要参考[这个](http://cuddle.googlecode.com/hg/talk/lex.html)。
+mixer的词法分析实现主要参考[这个](http://cuddle.googlecode.com/hg/talk/lex.html)。主要实现在[parser模块](https://github.com/siddontang/mixer/tree/master/src/parser)。
 
 对于一个lexer，需要提供的是NextToken的功能，供外部获取下一个token，从而进行后续的操作（譬如语法分析）。
 

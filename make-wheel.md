@@ -31,10 +31,10 @@ amazon s3的接口因为都是restful形式，同时签名机制已经非常熟�
 
 即使真的需要自己去写一个轮子，还需要不停的问自己：我这个轮子稳定性如何，能否高效的运行，后续随着需求的变更我能不能很容易的掌控？如果发现自己搞不定，还是求助一下别人比较好。
 
-如果我对某一个知识点特别有兴趣，想去深入研究并且有时间，那我觉得自己造几个轮子也算是很不错的事情。譬如我前段时间想重新深入了解网络编程，虽然有libev，libevent这些好用的开源库，我也基于他们封装了很多东西，譬如[tnet](https://github.com/siddontang/tnet)，[tpush](https://github.com/siddontang/tpush)，但是我仍然自己写了一个[libtnet](https://github.com/siddontang/libtnet)，写完了，我才有“啊哈，原来是这样“这种豁然开朗的感觉。
+如果我对某一个知识点特别有兴趣，想去深入研究并且有时间，那我觉得自己造几个轮子也算是很不错的事情。譬如我前段时间想重新深入了解网络编程，虽然有libev这些好用的开源库，我也基于他们封装了很多东西，譬如[tnet](https://github.com/siddontang/tnet)，[tpush](https://github.com/siddontang/tpush)，但是我仍然自己写了一个[libtnet](https://github.com/siddontang/libtnet)，写完了，我才有“啊哈，原来是这样“这种豁然开朗的感觉。
 
 # 写在后面
 
 随着现在github这类网站的流行，找到高质量的第三方实现已经变成一件很容易的事情，作为一个程序员，不能固步自封，总认为我自己写的才是好的，有时候“自己动手，丰衣足食”这种想法反而会累死自己。
 
-今天刚好看到了一篇文章[一位码农的几点思考](http://it.deepinmind.com/%E5%85%B6%E5%AE%83/2014/04/29/knowing-the-bits.html)，里面的观点我很赞同，可能我写了这么多年程序，也慢慢成了老鸟了。
+今天刚好看到了一篇文章[一位码农的几点思考](http://it.deepinmind.com/%E5%85%B6%E5%AE%83/2014/04/29/knowing-the-bits.html)，里面的观点我很赞同，与大家共勉。

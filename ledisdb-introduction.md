@@ -16,6 +16,52 @@
 
 所以，我们可以认为，ledisdb是一个基于redis通信协议，提供了多种高级数据结构的nosql数据库，它并不是另一个redis。
 
+## 编译安装
+
+因为ledisdb是用go写的，所以首先需要安装go以及配置GOROOT，GOPATH。
+
+    mkdir $WORKSPACE
+    cd $WORKSPACE
+    git clone git@github.com:siddontang/ledisdb.git src/github.com/siddontang/ledisdb
+
+    cd src/github.com/siddontang/ledisdb
+
+    #构建leveldb，如果已经安装了，可忽略
+    ./build_leveldb.sh  
+    
+    #安装ledisdb go依赖
+    . ./bootstap.sh     
+    
+    #配置GOPATH等环境变量
+    . ./dev.sh          
+    
+    go install ./... 
+    
+具体的安装说明，可以查看代码目录下面的readme。
+
+## Example
+
+使用ledisdb很简单，只需要运行：
+
+    ./ledis-server -config=/etc/ledis.json
+   
+ledisdb的配置文件采用json格式，为啥选用json，我在[使用json作为主要的配置格式](http://blog.csdn.net/siddontang/article/details/23595817)里面有过说明。
+
+我们可以使用任何redis客户端连接ledisdb，譬如redis-cli，如下：
+
+    127.0.0.1:6380> set a 1
+    OK
+    127.0.0.1:6380> get a
+    "1"
+    127.0.0.1:6380> incr a
+    (integer) 2
+    127.0.0.1:6380> mset b 2 c 3
+    OK
+    127.0.0.1:6380> mget a b c
+    1) "2"
+    2) "2"
+    3) "3"
+
 ## leveldb
 
 因为leveldb是c++写的，所以在go里面需要使用，cgo是一种很好的方式。这里，我直接使用了[levigo](https://github.com/jmhodges/levigo)这个库，并在上面进行了封装，详见[这里](http://blog.csdn.net/siddontang/article/details/24359873)。虽然有一个go-leveldb，无奈仍不能用。
@@ -42,34 +88,6 @@ leveldb的一些参数在构建编译的时候是需要调整的，这点我没�
 
 相关参数的调优，只能等我后续深入研究leveldb了在好好考虑。
 
-## 编译安装
-
-因为ledisdb是用go写的，所以首先需要安装go以及配置GOROOT，GOPATH。
-
-    mkdir $WORKSPACE
-    cd $WORKSPACE
-    git clone git@github.com:siddontang/ledisdb.git src/github.com/siddontang/ledisdb
-
-    cd src/github.com/siddontang/ledisdb
-
-    #构建leveldb，如果已经安装了，可忽略
-    ./build_leveldb.sh  
-    
-    #安装ledisdb go依赖
-    . ./bootstap.sh     
-    
-    #配置GOPATH等环境变量
-    . ./dev.sh          
-    
-    go install ./... 
-    
-具体的安装说明，可以查看代码目录下面的readme。
-
-使用ledisdb很简单，只需要运行：
-
-    ./ledis-server -config=/etc/ledis.json
-   
-ledisdb的配置文件采用json格式，为啥选用json，我在[使用json作为主要的配置格式](http://blog.csdn.net/siddontang/article/details/23595817)里面有过说明。
 
 ## 性能测试
 

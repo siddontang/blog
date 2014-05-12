@@ -1,4 +1,4 @@
-最近看了一篇关于go产品开发最佳实践的文章，[go-in-procution](http://peter.bourgon.org/go-in-production/)。作者总结了他们在用go开发过程中的很多实际经验，我们很多其实也用到了，鉴于此，这里就简单的写写读后感，后续我也争取能将这篇文章翻译出来。后续我用soundcloud来指代原作者。
+最近看了一篇关于go产品开发最佳实践的文章，[go-in-procution](http://peter.bourgon.org/go-in-production/)。作者总结了他们在用go开发过程中的很多实际经验，我们很多其实也用到了，鉴于此，这里就简单的写写读后感，后续我也争取能将这篇文章翻译出来。后面我用soundcloud来指代原作者。
 
 ## 开发环境
 
@@ -181,7 +181,7 @@ go的testing包提供的功能并不强，譬如没有提供assert_equal这类�
 
 soundcloud使用了一种vendor的方式进行依赖管理。其实很简单，就是把依赖的东西全部拷贝到自己的工程下面，当做自己的代码来使用。不过这个就需要定期的维护依赖包的更新了。
 
-如果引入的是一个可执行包，在自己的工程目录下面建立一个**_vendor**文件夹（这样go的相关tool例如go test就会忽略该文件夹的东西）。把**_vendor**作为单独的GOPATH，例如，拷贝github.com/user/dep到_vendor/src/github.com/user/dep下面。然后将**_vendor**加入自己的GOPATH中，如下：
+如果引入的是一个可执行包，在自己的工程目录下面建立一个\_vendor文件夹（这样go的相关tool例如go test就会忽略该文件夹的东西）。把\_vendor作为单独的GOPATH，例如，拷贝github.com/user/dep到\_vendor/src/github.com/user/dep下面。然后将\_vendor加入自己的GOPATH中，如下：
 
     GO ?= go
     GOPATH := $(CURDIR)/_vendor:$(GOPATH)

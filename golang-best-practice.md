@@ -132,9 +132,7 @@ Note that there’s never a src directory involved. With the exception of a vend
 
 我们尝试了很多方法给go程序传递配置：传递配置文件，从os.Getenv，直接获取环境变量，各种各样的value-add标志解析包。最后，最好的方式就是使用默认的flag包。严格的类型和简单的语义就足够我们需求了。
 
-我们发布了主要的12-Factor应用，该应用通过环境变量传递配置，但是后来，我们通过一个启动脚本将环境变量转换成了flag。在程序和执行环境之间，Flags提供了一个明显的，完全文档化的表现层。
-
-Flags act as an explicit and fully-documented surface area between a program and its operating context. 
+我们发布了主要的12-Factor应用，该应用通过环境变量传递配置，但是后来，我们通过一个启动脚本将环境变量转换成了flag。在程序和执行环境之间，Flags提供了一个明显的，完全文档化的表现层。（Flags act as an explicit and fully-documented surface area between a program and its operating context. ）
 
 对于理解和执行应用，flags是无价的。
 
@@ -149,22 +147,21 @@ Flags act as an explicit and fully-documented surface area between a program and
         // ...
     }
 
-# 日志和监控
+# 日志和遥测（telemetry）
 
-我们使用了多个日志框架，他们有些提供了不同日志级别，输出路由，特定的格式化等功能。但是最终，我们使用了原始的log包，因为我们仅仅需要记录操作记录。也就是说，panic-level的错误需要被人工记录，而结构化的数据则会被其它机器消费。例如，search dispatcher发送任何它处理的请求
+我们使用了多个日志框架，他们有些提供了不同日志级别，输出路由，特定的格式化等功能。但是最终，我们使用了原始的log包，因为我们仅仅需要记录操作记录。也就是说，panic-level的错误需要被人工记录，而结构化的数据则会被其它机器消费。例如，search dispatcher发送任何它处理的包含上下文环境的请求，因此我们的分析器就能知道从新西兰来的IP有多频繁搜索了Lorde，或者其它。
 
-We played around with several logging frameworks, providing things like leveled logging, debug, output routing, special formatting, and so on. In the end, we settled on plain package log. It works because we only log actionable information. That means serious, panic-level errors that need to be addressed by humans, or structured data that will be consumed by other machines. For example, the search dispatcher emits every request it processes with contextual information, so our analytics workflows can see how often people with New Zealand IPs search for Lorde, or whatever.
+任何从当前运行进程里面发送的东西我们都称之为遥测。包括请求相应时间，QPS，运行时错误，队列长度等。遥测通常有两种模式，推和拉。
 
-Everything else emitted by a running process we consider telemetry. Request response times, QPS, runtime errors, queue depths, and so on. And telemetry basically operates in one of two models: push and pull.
+推意味着数据发送给一个特定的外部系统。例如，Graphite，Statsd，AirBrake都使用的这种方式。
 
-Push means emitting metrics to a known external system. For example, Graphite, Statsd, and AirBrake work this way.
-Pull means exposing metrics at some known location, and allowing an external system to scrape them. For example, expvar and Prometheus work this way. (Maybe there are others?)
-Both styles have their place. Push is intuitive and straightforward to use when you’re just getting started. But pushed metrics are perversely incentivized with growth: the bigger you get, the more they cost, in terms of CPU cycles and bandwidth. We’ve found that past a certain size of infrastructure, pull is the only model that scales. There’s also a lot of value in being able to introspect a running system. So, best practice: expvar or expvar-style metrics exposition.
+拉意味着在一些地方暴漏这些数据，并且允许外部的系统去获取他们。例如，expvar，Prometheus都是使用这种方式。（可能还有其他的？）
 
+两种模式都有他们的定位。开始的时候，推能够直观和明确的使用，但是当数据量增长的时候，推需要占用更多的资源。当数据量越多，推消耗的越多，包括CPU和带宽。我们发现过去一个特定大小的基础构件，拉是应对扩展的唯一模式。在一个运行的系统中，有很多数据需要关注，所以，最好的实践：expvar or expvar-style metrics exposition。
 
-Testing and validation ∞
+# 测试和验证
 
-We tried many different testing libraries and frameworks over the course of a year, but very quickly gave up on most of them, and today all of our testing is done with plain package testing, via data-driven (table-driven) tests. We don’t have strong or specific complaints against testing/checking packages, beyond that they simply provided no great value. One thing that does help: reflect.DeepEqual gives you simple, full comparison of arbitrary data (i.e. expected vs. got).
+我们尝试过多个不同的测试库以及框架，但是很快就放弃他们了。现在，我们使用的是最简单的testing包，通过数据驱动（或者表驱动）测试。我们对这个测试包没有啥抱怨的，除了他们没提供强大的值检测。不过通过reflect.DeepEqual能帮你简化，它能做到任意数据的比较。（例如expected vs got）
 
 Package testing is geared around unit testing, but for integration tests, things are a little trickier. The process of spinning up external services typically depends on your integration environment, but we did find one nice idiom to integrate against them. Write an integration_test.go, and give it a build tag of integration. Define (global) flags for things like service addresses and connect strings, and use them in your tests.
 

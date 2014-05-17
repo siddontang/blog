@@ -108,7 +108,10 @@ Google最近发布了go的[代码规范](https://code.google.com/p/go-wiki/wiki/
 类似的，当构造一个对象的时候，最好在初始化的时候就传入相关参数，而不是在后面设置：
 
     f := foo.New(foo.Config{    
-        Site: "zombo.com",         Out:  os.Stdout,         Dest: conference.KeyPair{             Key:   "gophercon",
+        Site: "zombo.com",            
+        Out:  os.Stdout,
+        Dest: conference.KeyPair{
+            Key:   "gophercon",
             Value: 2014,
         },
     })

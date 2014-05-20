@@ -1,6 +1,6 @@
 ledisdb现在可以支持嵌入式使用。你可以将其作为一个独立的lib（类似leveldb）直接嵌入到你自己的应用中去，而无需在启动单独的服务。
 
-ledisdb提供的API仍然类似redis接口。首先，你需要创建db对象：
+ledisdb提供的API仍然类似redis接口。首先，你需要创建ledis对象：
 
     import "github.com/siddontang/ledisdb/ledis"
     
@@ -16,9 +16,15 @@ ledisdb提供的API仍然类似redis接口。首先，你需要创建db对象：
     }
     ')
     
-    db, _ := ledis.OpenDB(configJson)
+    l, _ := ledis.Open(configJson)
     
 data_db就是数据存储的leveldb位置，简单起见，所有的size配置全部使用byte作为单位。
+    
+然后我们选择一个db使用，
+
+    db, _ := l.Select(0)
+    
+类似redis，我们也只支持数字类型的db，最多16个db，索引范围为[0-15]。支持太多的db真没啥意义。
     
 下面是一些简单的例子：
 

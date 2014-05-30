@@ -92,7 +92,7 @@ zset可以算是最为复杂的，我们需要使用三套key来实现。
 
 这里重点说一下score，在redis里面，score是一个double类型的，但是我们决定在ledisdb里面只使用int64类型，原因一是double还是有浮点精度问题，在不同机器上面可能会有误差（没准是我想多了），另一个则是我不确定double的8字节memcmp是不是也跟实际比较结果一样（没准也是我想多了），其实更可能的原因在于我们觉得int64就够用了，实际上我们项目也只使用了int的score。
 
-因为score是int64的，我们需要将其转成大端序存储，这样通过memcmp比较才会有正确的结果。同时int64有正负的区别，负数最高位为1，所以如果只是单纯的进行binary比较，那么负数一定比整数大，这个我们通过在构建key的时候负数前面加"<"，而正数（包括0）加"="来解决。所以我们score这套key的格式就是这样：
+因为score是int64的，我们需要将其转成大端序存储（好吧，我假设大家都是小端序的机器），这样通过memcmp比较才会有正确的结果。同时int64有正负的区别，负数最高位为1，所以如果只是单纯的进行binary比较，那么负数一定比正数大，这个我们通过在构建key的时候负数前面加"<"，而正数（包括0）加"="来解决。所以我们score这套key的格式就是这样：
 
     key<score:member //<0
     key=score:member //>=0
@@ -105,4 +105,4 @@ zset可以算是最为复杂的，我们需要使用三套key来实现。
 
 后续ledisdb还会持续进行性能优化，同时提供expire以及replication功能的支持，预计6月份我们就会实现。
 
-ledisdb的代码在这里[https://github.com/siddontang/ledisdb](https://github.com/siddontang/ledisdb)，希望感兴趣的童鞋多多反馈。
+ledisdb的代码在这里[https://github.com/siddontang/ledisdb](https://github.com/siddontang/ledisdb)，希望感兴趣的童鞋共同参与。

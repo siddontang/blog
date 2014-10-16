@@ -47,13 +47,13 @@ Delete(key)
 
 REST是Representational state transfer的缩写，而满足REST架构模型的我们通常称之为Restful：
 
-+ 使用URI来表示资源，譬如http://example.com/user/1代表ID为1的user。
-+ 使用标准HTTP方法GET，POST，PUT，DELETE等来操作资源，譬如Get http://example.com/user/1 来获取user 1的信息，而使用Delete http://example.com/user/1 来删除user 1。
++ 使用URI来表示资源，譬如`http://example.com/user/1` 代表ID为1的user。
++ 使用标准HTTP方法GET，POST，PUT，DELETE等来操作资源，譬如`Get http://example.com/user/1` 来获取user 1的信息，而使用`Delete http://example.com/user/1` 来删除user 1。
 + 支持资源的多种表现形式，譬如上例Get中设置Content-Type为json，让服务端返回json格式的user信息。
 
 相对于Restful，另一种则是Arbitrary的，我不熟悉SOAP，这里就以RPC为例。
 
-RPC就是remote procedure call，它通过在HTTP请求中显示的制定需要调用的过程名字以及参数来与服务端进行交互。仍然是上面的例子，如果我们需要得到用户的信息，可能就是这样Get http://example.com/getuser?userid=1，如果要删除一个用户，没准是这样Get http://example.com/delUser?userid=1。
+RPC就是remote procedure call，它通过在HTTP请求中显示的制定需要调用的过程名字以及参数来与服务端进行交互。仍然是上面的例子，如果我们需要得到用户的信息，可能就是这样 `Get http://example.com/getuser?userid=1`, 如果要删除一个用户，没准是这样`Get http://example.com/delUser?userid=1`。
 
 那选择何种架构呢？在这里，我倾向使用Restful架构模型，很大原因在于它理解起来很容易，而且实现简单，而现在越来越多的Web service提供的API采用的是Restful模式，从另一个方面也印证了它的流行。
 

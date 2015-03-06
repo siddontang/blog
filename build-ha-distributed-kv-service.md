@@ -120,7 +120,9 @@ redis-failover会存在单点问题，所以redis-failover自身需要支持clus
     
     但codis并不支持LedisDB，同时为了满足他们自身的需求，使用的也是一个修改版的redis，鉴于此，笔者实现了[xcodis][2]，一个基于codis的，支持LedisDB以及原生redis的proxy。
     
-## 最终架构
+## 架构
+
+![kv architecture](./asserts/kv-architecture.png)
 
 [1]: https://github.com/siddontang/ledisdb  "A Fast NoSQL"
 [2]: https://github.com/siddontang/xcodis  "A distributed Redis/LedisDB proxy"

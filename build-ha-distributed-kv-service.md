@@ -98,7 +98,7 @@ redis-failover会存在单点问题，所以redis-failover自身需要支持clus
 
 ## 分布式集群
 
-我们通过使用LedisDB来解决了Redis单机数据容量问题，通过replication机制保证数据安全性，通过redis-failover用来进行failover处理，到现在为止，这套架构能很好地工作，但随着数据量的持续增大，单台机器最终无法存储所有数据了，我们不得不考虑通过cluster的方式来解决，也就是将数据放到不同的机器上面去。
+随着数据量的持续增大，单台机器最终无法存储所有数据，我们不得不考虑通过cluster的方式来解决，也就是将数据放到不同的机器上面去。
 
 要构建LedisDB的cluster，笔者考虑了如下三种方案，这里，我们不说啥hash取模或者consistency hash了，如果cluster真能通过这两种技术简单搞定，那还要这么费力干啥。
 
@@ -122,7 +122,13 @@ redis-failover会存在单点问题，所以redis-failover自身需要支持clus
     
 ## 架构
 
-![kv architecture](./asserts/kv-architecture.png)
+最终的架构如下。
+
+![kv architecture](https://raw.githubusercontent.com/siddontang/blog/master/asserts/kv-architecture.png)
+
+我们通过使用LedisDB来解决了Redis单机数据容量问题，通过replication机制保证数据安全性，通过redis-failover用来进行failover处理，最后通过xcodis进行集群管理。
+
+当前，这套架构并没有在生产环境中得到验证，但我们一直在内部不断测试，而且国外也有用户在帮助笔者验证这套架构，所以笔者对其还是很有信心的，希望能早日上线。如果有哪位童鞋也对这套架构感兴趣，想吃螃蟹的，笔者非常愿意提供支持。
 
 [1]: https://github.com/siddontang/ledisdb  "A Fast NoSQL"
 [2]: https://github.com/siddontang/xcodis  "A distributed Redis/LedisDB proxy"

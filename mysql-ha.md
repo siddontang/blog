@@ -6,7 +6,7 @@
 
 为了解决这个问题，我们可以使用semi-synchronous replication，semi-synchronous replication的原理很简单，当master处理完一个事务，它会等待至少一个支持semi-synchronous的slave确认收到了该事件并将其写入relay-log之后，才会返回。这样即使master当机，最少也有一个slave获取到了完整的数据。
 
-但是，semi-synchronous并不是100%的保证数据不会丢失，如果master在完成事务并将其发送给slave的时候崩溃，仍然可能造成数据丢失。只是相比于传统的异步复制，semi-synchronous replication能极大地提升数据安全。更为重要的是，它并不慢，MHA的作者都说他们在facebook的生产环境中使用了semi-synchronous（[这里](http://yoshinorimatsunobu.blogspot.ca/2014/04/semi-synchronous-replication-at-facebook.html)），所以我觉得真心没必要担心它的性能问题，除非你的业务量级已经完全超越了facebook或者google。
+但是，semi-synchronous并不是100%的保证数据不会丢失，如果master在完成事务并将其发送给slave的时候崩溃，仍然可能造成数据丢失。只是相比于传统的异步复制，semi-synchronous replication能极大地提升数据安全。更为重要的是，它并不慢，MHA的作者都说他们在facebook的生产环境中使用了semi-synchronous（[这里](http://yoshinorimatsunobu.blogspot.ca/2014/04/semi-synchronous-replication-at-facebook.html)），所以我觉得真心没必要担心它的性能问题，除非你的业务量级已经完全超越了facebook或者google。在[这篇](http://yoshinorimatsunobu.blogspot.jp/2014/04/semi-synchronous-replication-at-facebook.html)文章里面已经提到，MySQL 5.7之后已经使用了Loss-Less Semi-Synchronous replication，所以丢数据的概率已经很小了。
 
 如果真的想完全保证数据不会丢失，现阶段一个比较好的办法就是使用[gelera](http://galeracluster.com/)，一个MySQL集群解决方案，它通过同时写三份的策略来保证数据不会丢失。笔者没有任何使用gelera的经验，只是知道业界已经有公司将其用于生产环境中，性能应该也不是问题。但gelera对MySQL代码侵入性较强，可能对某些有代码洁癖的同学来说不合适了:-)
 
@@ -34,7 +34,7 @@
 
 使用zookeeper的问题在于部署起来较为复杂，同时如果进行了failover，如何让应用程序获取到最新的数据库地址也是一个比较麻烦的问题。
 
-对于部署问题，我们要保证一个MySQL搭配一个agent，幸好这年头有了docker，所以真心很简单。而对于第二个数据库地址更改的问题，其实并不是使用了zookeeper才会有的，我们可以通知应用动态更新配置信息，或者使用proxy来解决。
+对于部署问题，我们要保证一个MySQL搭配一个agent，幸好这年头有了docker，所以真心很简单。而对于第二个数据库地址更改的问题，其实并不是使用了zookeeper才会有的，我们可以通知应用动态更新配置信息，VIP，或者使用proxy来解决。
 
 虽然zookeeper的好处很多，但如果你的业务不复杂，譬如只有一个master，一个slave，zookeeper可能并不是最好的选择，没准keepalived就够了。
 
@@ -90,16 +90,30 @@ delimiter ;
 set global event_scheduler := 1;
 ```
 
-它在MySQL上面创建了一个事件，每隔1s，就将一个uuid写入到一个view里面，而这个是会记录到binlog中的，虽然我们仍然不能像GTID那样直接定位到一个event，但也能定位到一个1s的区间了，这样我们就能在很小的一个区间里面对比两个MySQL的binlog了。
+它在MySQL上面创建了一个事件，每隔10s，就将一个uuid写入到一个view里面，而这个是会记录到binlog中的，虽然我们仍然不能像GTID那样直接定位到一个event，但也能定位到一个10s的区间了，这样我们就能在很小的一个区间里面对比两个MySQL的binlog了。
 
 继续上面的例子，假设c最后一次出现uuid的位置为s1，我们在b里面找到该uuid，位置为s2，然后依次对比后续的event，如果不一致，则可能出现了问题，停止复制。当遍历到c最后一个binlog event之后，我们就能得到此时b下一个event对应的filename以及position了，然后让c指向这个位置开始复制。
 
 使用Pseudo GTID需要slave打开`log-slave-update`的选项，考虑到GTID也必须打开该选项，所以个人感觉完全可以接受。
 
-后续，笔者自己实现的failover工具，将会采用这种Pseudo GTID的方式实现。
+~~后续，笔者自己实现的failover工具，将会采用这种Pseudo GTID的方式实现。~~
 
 在《MySQL High Availability》这本书中，作者使用了另一种GTID的做法，每次commit的时候，需要在一个表里面记录gtid，然后就通过这个gtid来找到对应的位置信息，只是这种方式需要业务MySQL客户端的支持，笔者不很喜欢，就不采用了。
 
 ## 后记
 
 MySQL HA一直是一个水比较深的领域，笔者仅仅列出了一些最近研究的东西，有些相关工具会尽量在[go-mysql](https://github.com/siddontang/go-mysql)中实现。
+
+## 更新
+
+经过一段时间的思考与研究，笔者又有了很多心得与收获，设计的MySQL HA跟先前有了很多不一样的地方。后来发现，自己设计的这套HA方案，跟facebook这篇[文章](http://yoshinorimatsunobu.blogspot.jp/2014/04/semi-synchronous-replication-at-facebook.html)几乎一样，加之最近跟facebook的人聊天听到他们也正在大力实施，所以感觉自己方向是对了。
+
+新的HA，我会完全拥抱GTID，比较这玩意的出现就是为了解决原先replication那一堆问题的，所以我不会考虑非GTID的低版本MySQL了。幸运的是，我们项目已经将MySQL全部升级到5.6，完全支持GTID了。
+
+不同于fb那篇文章将mysqlbinlog改造支持semi-sync replication协议，我是将go-mysql的replication库支持semi-sync replication协议，这样就能实时的将MySQL的binlog同步到一台机器上面。这可能就是我和fb方案的唯一区别了。
+
+只同步binlog速度铁定比原生slave要快，毕竟少了执行binlog里面event的过程了，而另外真正的slaves，我们仍然使用最原始的同步方式，不使用semi-sync replication。然后我们通过MHA监控整个集群以及进行故障转移处理。
+
+以前我总认为MHA不好理解，但其实这是一个非常强大的工具，而且真正看perl，发现也还是看的懂得。MHA已经被很多公司用于生产环境，经受了检验，直接使用绝对比自己写一个要划算。所以后续我也不会考虑zookeeper，考虑自己写agent了。
+
+不过，虽然设想的挺美好，但这套HA方案并没有在项目中实施，主要原因在于笔者打算近期离职，如果现在贸然实施，后续出问题了就没人维护了。:-)

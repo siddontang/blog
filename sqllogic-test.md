@@ -97,4 +97,4 @@ sqllogic test还支持一些控制语句，譬如 halt，这个主要是用来�
 
 总的来说，sqllogic test script格式还是挺简单的，我自己也是花了1个多小时写出来一个就开始跑测试了，当然后续也碰到了一些坑，譬如计算如果有row sort或者value sort，hash的计算就一定要在排序之后，以及string的结果其实需要转成integer等。
 
-因为有了这套test case，我们在测试的时候也fix了很多我们这边SQL的问题，到现在为止，我们已经能完全pass index目录下面所有的test了，算是一个小里程碑了。争取早日能完全pass所有的test。
+因为有了这套test case，我们在测试的时候也fix了很多我们这边SQL的问题，到现在为止，我们已经能完全pass index目录下面所有的test了，共计2039091个，算是一个小里程碑了。争取早日能完全pass所有的test。

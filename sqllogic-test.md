@@ -1,16 +1,10 @@
 # 使用sqllogic test进行SQL逻辑测试
 
-现在在PingCAP进行NewSQL的开发，势必要学F1一样考虑支持SQL协议，因为我们现阶段的目标是提供对MySQL大部分语法的支持，所以如何保证我们实现的SQL语法正确性就是一个问题了。
+[sqllogictest](http://sqlite.org/sqllogictest/doc/trunk/about.wiki)是sqlite的一套sql logic 测试集合，它不光支持对sqlite的测试，还支持不同database（包括MySQL），所以可以说是开发数据库进行逻辑测试的利器。
 
-MySQL有一个test集合，如果能跑通这里面所有的case，当然就没任何问题了，但是我们也知道现阶段这是不可能的，因为这个test集合里面有很多MySQL特定的东西是我们现阶段不支持的，所以pass这个test集合只是未来我们的目标（当然现在也pass了一点了:-)）。
+sqllogic test的脚本格式异常简单，看文档一下子就明白怎么弄了，这里简单记录一下。
 
-虽然我们自己可以写很多test case，但是并不能保证完全cover。所以现在我们需要一个更好的工具，单纯地测试SQL的logic正确性，让我们知道现阶段对SQL的处理，包括lexer，parser，以及后续生成execute plan，index plan这些的都是logic正确的，注意，我这里只是说logic正确，并没有保证performance。
-
-幸运的是，我们发现sqlite有一套logic test集合，[sqllogictest](http://sqlite.org/sqllogictest/doc/trunk/about.wiki)，它不光支持对sqlite的测试，还支持不同database（包括MySQL），所以只要我们能跑过这套测试集合，至少证明了我们的SQL支持大部分是没问题的。当然这里面并没有全部cover MySQL的语法，谁都知道MySQL语法是以复杂出名的，很多特性都是不同于SQL标准的。对于这部分，我们只能依赖于MySQL自己的test了。
-
-sqllogictest的源码很简单，但是依赖于ODBC的东西来编译，话说在我的mac电脑上面，整ODBC的东西是一件异常痛苦的事情，反正最后没搞定，我这人比较懒，复杂度高特复杂但没啥技术含量，google半天还没法solve的事情我真不想弄。而且想到我的同事还需要像我一样折腾整个环境的配置，整个团队时间成本消耗是很大的，所以还不如直接用go写一个，这样大家直接就能跑test case了。
-
-sqllogic test的脚本格式异常简单，看文档一下子就明白怎么弄了。它的每一个test case之间，都是使用空行分隔，case主要有两种，statement和query。
+sqllogic test的每一个test case之间，都是使用空行分隔，case主要有两种，statement和query。
 
 ## statement 
 
@@ -93,8 +87,3 @@ sqllogic test还支持一些控制语句，譬如 halt，这个主要是用来�
 
 譬如，如果skipif mysql，则表明如果使用MySQL，则不跑紧跟着的下个case，如果是onlyif mysql，则表明只有MySQL才能运行下面这个测试。
 
-## TODO
-
-总的来说，sqllogic test script格式还是挺简单的，我自己也是花了1个多小时写出来一个就开始跑测试了，当然后续也碰到了一些坑，譬如计算如果有row sort或者value sort，hash的计算就一定要在排序之后，以及string的结果其实需要转成integer等。
-
-因为有了这套test case，我们在测试的时候也fix了很多我们这边SQL的问题，到现在为止，我们已经能完全pass index目录下面所有的test了，共计2039091个，算是一个小里程碑了。争取早日能完全pass所有的test。

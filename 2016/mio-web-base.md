@@ -125,6 +125,8 @@ impl Handler for TickHandler {
 }
 
 let mut event_loop = EventLoop::new().unwrap();
+let sender = event_loop.channel();
+sender.send(0).unwrap();
 event_loop.run(&mut TickHandler).unwrap();
 ```
 

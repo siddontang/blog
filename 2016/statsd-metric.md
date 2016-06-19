@@ -47,22 +47,22 @@ echo "foo:1|c" | nc -w 1 -u 127.0.0.1 8125
 
 ### Counting
 
-最简单的metric应该就是counter，也就是通常的计数功能，StatsD会将受到的counter value累加，然后在flush的时候输出，并且重新清零。所以我们用counter就能非常方便的查看一段时间某个操作的频率，譬如对于一个HTTP服务来说，我们可以使用counter来统计request的次数，finish这个request的次数以及fail的次数。
+最简单的metric应该就是counter，也就是通常的计数功能，StatsD会将收到的counter value累加，然后在flush的时候输出，并且重新清零。所以我们用counter就能非常方便的查看一段时间某个操作的频率，譬如对于一个HTTP服务来说，我们可以使用counter来统计request的次数，finish这个request的次数以及fail的次数。
 
 ### Gauges
 
-不同于Counter，Gauge在下次flush的时候是不会清零的，另外，gauge通常是在client进行统计好在发给StatsD的，譬如, `capacity:100|g` 这样的guage，即使我们发送多次，在Statsd里面，也只会保存100，不会学counter那样进行累加。
+不同于Counter，Gauge在下次flush的时候是不会清零的，另外，gauge通常是在client进行统计好在发给StatsD的，譬如, `capacity:100|g` 这样的gauge，即使我们发送多次，在StatsD里面，也只会保存100，不会学counter那样进行累加。
 
-但我们可以通过显示的加入符号来让Statsd帮我们进行累加，譬如:
+但我们可以通过显示的加入符号来让StatsD帮我们进行累加，譬如:
 
 ```
 capacity:+100|g
 capacity:-100|g
 ```
 
-假设我们原来的capacity guage的值为100，经过上面的操作之后，guage仍然是100。
+假设我们原来的capacity gauge的值为100，经过上面的操作之后，gauge仍然是100。
 
-如果我们需要记录当前的总用户数，或者CPU，Memory的usage，使用guage就是一个不错的选择。
+如果我们需要记录当前的总用户数，或者CPU，Memory的usage，使用gauge就是一个不错的选择。
 
 ### Sets
 
@@ -78,7 +78,7 @@ StatsD就会展示这个request metric只有1，2两个用户访问了。
 
 ### Timing
 
-最后再来说timing，timeing顾名思义，就是记录某个操作的耗时，譬如：
+最后再来说timing，timing顾名思义，就是记录某个操作的耗时，譬如：
 
 ```
 foo:100|ms

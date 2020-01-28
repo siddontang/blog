@@ -56,7 +56,7 @@
 
 虽然现在远程的概念吵得很火热，但在中国，据我自己的接触，其实并没有多少公司允许员工远程工作，而像我们公司，允许 Tech Leader 远程上班的就可能更少了。
 
-最后，还是打个广告吧，我们现在正在做下一代分布式数据库 TiDB，源代码全部放在 Github，如果你对我们的工作感兴趣，以及想尝试远程上班，欢迎加入。
+最后，还是打个广告吧，我们现在正在做下一代分布式数据库 TiDB，源代码全部放在 GitHub，如果你对我们的工作感兴趣，以及想尝试远程上班，欢迎加入。
 
 + TiDB: [https://github.com/pingcap/tidb](https://github.com/pingcap/tidb)
 + TiKV: [https://github.com/pingcap/tikv](https://github.com/pingcap/tikv)
